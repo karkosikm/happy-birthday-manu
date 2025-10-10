@@ -39,28 +39,39 @@
     @keyframes float{0%{transform:translateY(0)}100%{transform:translateY(-140px)}}
 
     .wrap{
-      width:100%; max-width:900px; text-align:center; position:relative;
+      width:100%; 
+      max-width:900px; 
+      text-align:center; 
+      position:relative;
+      padding-top: 36px; /* breathing room for headline */
     }
 
     h1{
       font-family: 'Dancing Script', cursive; 
       font-weight:700; 
       color:var(--accent);
-      font-size:clamp(1.8rem, 6vw, 3.2rem); /* responsive scaling */
-      margin: 0 0 14px; /* more breathing room */
-      line-height: 1.2; /* prevent cut-off */
-      text-shadow:0 2px 0 #fff8;
+      font-size:clamp(1.8rem, 5.2vw, 3rem); 
+      margin: 0 0 16px; 
+      line-height: 1.25; 
+      text-shadow: 0 1px 0 #fff8;
+      padding-top: 4px; 
     }
-    .subtitle{margin:0 0 18px; opacity:.9; font-size:clamp(1rem, 3.4vw, 1.2rem)}
+    .subtitle{
+      margin:0 0 18px; 
+      opacity:.9; 
+      font-size:clamp(1.2rem, 3.8vw, 1.6rem);
+      font-family: 'Dancing Script', cursive;
+      color:#444;
+    }
 
     /* Polaroid frame */
     .polaroid{
       position:relative; background:var(--paper); width:min(100%, 820px);
-      padding:14px 14px 56px; /* extra bottom like a real polaroid */
+      padding:14px 14px 56px; 
       border-radius:18px; box-shadow:0 14px 40px rgba(0,0,0,.12);
       margin:10px auto 14px; transform:rotate(-.3deg);
     }
-    .polaroid::before, .polaroid::after{ /* washi tape corners */
+    .polaroid::before, .polaroid::after{ 
       content:""; position:absolute; width:120px; height:26px; background:var(--tape);
       top:-12px; border-radius:6px; box-shadow:0 4px 12px rgba(0,0,0,.08) inset;
       opacity:.9;
@@ -86,7 +97,7 @@
       .polaroid::before, .polaroid::after{width:92px; height:22px; top:-10px}
     }
     @media (max-width:380px){
-      h1 { font-size: 1.6rem; } /* smaller headline on tiny screens */
+      h1 { font-size: 1.6rem; }
     }
   </style>
 </head>
@@ -96,8 +107,8 @@
   </div>
 
   <main class="wrap" role="main">
-    <h1>Five Months, Mi Amor</h1>
-    <p class="subtitle">A little birthday surprise — our journey in moments ✨</p>
+    <h1>Happy Birthday Manu ❤️</h1>
+    <p class="subtitle">Five Months, Mi Amor ✨</p>
 
     <section class="polaroid" aria-label="Video keepsake">
       <div class="video">
@@ -121,8 +132,8 @@
       </div>
     </section>
 
-    <p class="note">Scan. Watch. Smile. This is us, today and always.</p>
-    <footer>Made with love · 2025</footer>
+    <p class="note">Watch. Smile. This is us, today and always.</p>
+    <footer>Made with love</footer>
   </main>
 </body>
 </html>
