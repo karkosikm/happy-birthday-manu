@@ -5,16 +5,11 @@
   <meta name="viewport" content="width=device-width, initial-scale=1" />
   <title>Happy Birthday Manu ❤️</title>
   <meta name="description" content="A birthday surprise — five months of us." />
-  <!-- Google Fonts -->
   <link href="https://fonts.googleapis.com/css2?family=Dancing+Script:wght@600;700&family=Inter:wght@400;500;700&display=swap" rel="stylesheet">
   <style>
     :root{
-      --bg1:#fff1f5; /* soft blush */
-      --bg2:#f3e8ff; /* lavender */
-      --ink:#2a2a2a;
-      --accent:#a21caf; /* plum */
-      --paper:#ffffff;
-      --tape:#fde68a; /* washi tape */
+      --bg1:#fff1f5; --bg2:#f3e8ff; --ink:#2a2a2a; --accent:#a21caf;
+      --paper:#ffffff; --tape:#fde68a;
     }
     *{box-sizing:border-box}
     html,body{height:100%;}
@@ -27,7 +22,7 @@
       min-height:100vh; padding:18px; overflow-x:hidden;
     }
 
-    /* Subtle floating bokeh */
+    /* Floaty bokeh */
     .bokeh{position:fixed; inset:0; pointer-events:none; overflow:hidden;}
     .dot{position:absolute; width:160px; height:160px; border-radius:50%;
       background:radial-gradient(circle at 30% 30%, #fff8, #fff0);
@@ -39,65 +34,51 @@
     @keyframes float{0%{transform:translateY(0)}100%{transform:translateY(-140px)}}
 
     .wrap{
-      width:100%; 
-      max-width:900px; 
-      text-align:center; 
-      position:relative;
-      padding-top: 36px; /* breathing room for headline */
+      width:100%; max-width:900px; text-align:center; position:relative;
+      padding-top:36px;
     }
 
     h1{
-      font-family: 'Dancing Script', cursive; 
-      font-weight:700; 
-      color:var(--accent);
-      font-size:clamp(1.8rem, 5.2vw, 3rem); 
-      margin: 0 0 16px; 
-      line-height: 1.25; 
-      text-shadow: 0 1px 0 #fff8;
-      padding-top: 4px; 
+      font-family:'Dancing Script',cursive; font-weight:700; color:var(--accent);
+      font-size:clamp(1.8rem, 5.2vw, 3rem);
+      margin:0 0 16px; line-height:1.25; text-shadow:0 1px 0 #fff8; padding-top:4px;
     }
     .subtitle{
-      margin:0 0 18px; 
-      opacity:.9; 
-      font-size:clamp(1.2rem, 3.8vw, 1.6rem);
-      font-family: 'Dancing Script', cursive;
-      color:#444;
+      margin:0 0 18px; opacity:.9; font-size:clamp(1.2rem, 3.8vw, 1.6rem);
+      font-family:'Dancing Script',cursive; color:#444;
     }
 
-    /* Polaroid frame */
     .polaroid{
       position:relative; background:var(--paper); width:min(100%, 820px);
-      padding:14px 14px 56px; 
-      border-radius:18px; box-shadow:0 14px 40px rgba(0,0,0,.12);
+      padding:14px 14px 56px; border-radius:18px; box-shadow:0 14px 40px rgba(0,0,0,.12);
       margin:10px auto 14px; transform:rotate(-.3deg);
     }
-    .polaroid::before, .polaroid::after{ 
+    .polaroid::before,.polaroid::after{
       content:""; position:absolute; width:120px; height:26px; background:var(--tape);
-      top:-12px; border-radius:6px; box-shadow:0 4px 12px rgba(0,0,0,.08) inset;
-      opacity:.9;
+      top:-12px; border-radius:6px; box-shadow:0 4px 12px rgba(0,0,0,.08) inset; opacity:.9;
     }
-    .polaroid::before{ left:14%; transform:rotate(-8deg); }
-    .polaroid::after{ right:14%; transform:rotate(8deg); }
+    .polaroid::before{left:14%; transform:rotate(-8deg)}
+    .polaroid::after{right:14%; transform:rotate(8deg)}
 
-    /* Responsive video */
-    .video{ position:relative; width:100%; height:75dvh; height:75svh; height:75vh; border-radius:12px; overflow:hidden; }
-    .video iframe, .video video{ position:absolute; inset:0; width:100%; height:100%; border:0; }
+    .video{position:relative; width:100%; height:75dvh; height:75svh; height:75vh; border-radius:12px; overflow:hidden;}
+    .video iframe,.video video{position:absolute; inset:0; width:100%; height:100%; border:0;}
 
-    .caption{ position:absolute; left:0; right:0; bottom:10px; text-align:center; font-size:.95rem; opacity:.7; }
+    .note{margin-top:8px; font-size:clamp(.95rem, 3vw, 1.05rem); opacity:.85;}
+    footer{margin-top:16px; font-size:.9rem; opacity:.65;}
 
-    .note{ margin-top:8px; font-size:clamp(.95rem, 3vw, 1.05rem); opacity:.85; }
-
-    footer{ margin-top:16px; font-size:.9rem; opacity:.65; }
-
-    /* Adjustments for very small phones */
+    /* Tiny phones */
     @media (max-width:430px){
       body{padding:12px}
       .polaroid{padding:10px 10px 48px}
       .video{height:72dvh}
-      .polaroid::before, .polaroid::after{width:92px; height:22px; top:-10px}
+      .polaroid::before,.polaroid::after{width:92px; height:22px; top:-10px}
     }
-    @media (max-width:380px){
-      h1 { font-size: 1.6rem; }
+    @media (max-width:380px){ h1{font-size:1.6rem} }
+
+    /* DESKTOP fix: push content down from the very top */
+    @media (min-width: 992px){
+      body{ align-items:flex-start; padding-top:56px; }
+      .wrap{ padding-top:28px; }
     }
   </style>
 </head>
@@ -112,7 +93,7 @@
 
     <section class="polaroid" aria-label="Video keepsake">
       <div class="video">
-        <!-- Replace the src below with your YouTube or Vimeo EMBED URL -->
+        <!-- Replace with your YouTube or Vimeo EMBED URL -->
         <iframe
           src="YOUTUBE_OR_VIMEO_EMBED_URL"
           title="Five Months of Us"
@@ -120,19 +101,17 @@
           allowfullscreen>
         </iframe>
 
-        <!-- ALTERNATIVE: host a small MP4 directly in this repo -->
+        <!-- Alternative: small MP4 hosted in this repo -->
         <!--
         <video controls playsinline poster="optional-cover.jpg">
           <source src="birthday.mp4" type="video/mp4" />
           Your browser does not support the video tag.
         </video>
         -->
-
-        <div class="caption">Forever yours — M ❤️</div>
       </div>
     </section>
 
-    <p class="note">Watch. Smile. This is us, today and always.</p>
+    <p class="note">Forever yours - M. ❤️</p>
     <footer>Made with love</footer>
   </main>
 </body>
