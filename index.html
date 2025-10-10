@@ -43,8 +43,12 @@
     }
 
     h1{
-      font-family: 'Dancing Script', cursive; font-weight:700; color:var(--accent);
-      font-size:clamp(2rem, 6.2vw, 3.4rem); margin:0 0 6px;
+      font-family: 'Dancing Script', cursive; 
+      font-weight:700; 
+      color:var(--accent);
+      font-size:clamp(1.8rem, 6vw, 3.2rem); /* responsive scaling */
+      margin: 0 0 14px; /* more breathing room */
+      line-height: 1.2; /* prevent cut-off */
       text-shadow:0 2px 0 #fff8;
     }
     .subtitle{margin:0 0 18px; opacity:.9; font-size:clamp(1rem, 3.4vw, 1.2rem)}
@@ -74,11 +78,15 @@
 
     footer{ margin-top:16px; font-size:.9rem; opacity:.65; }
 
+    /* Adjustments for very small phones */
     @media (max-width:430px){
       body{padding:12px}
       .polaroid{padding:10px 10px 48px}
       .video{height:72dvh}
       .polaroid::before, .polaroid::after{width:92px; height:22px; top:-10px}
+    }
+    @media (max-width:380px){
+      h1 { font-size: 1.6rem; } /* smaller headline on tiny screens */
     }
   </style>
 </head>
