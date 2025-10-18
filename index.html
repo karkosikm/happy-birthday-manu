@@ -9,8 +9,7 @@
   <style>
     :root{
       --bg1:#fff1f5; --bg2:#f3e8ff; --ink:#2a2a2a; --accent:#a21caf;
-      --paper:#ffffff;
-      --bezel:#0f172a22; /* subtle bezel shadow */
+      --paper:#ffffff; --bezel:#0f172a22;
     }
     *{box-sizing:border-box}
     html,body{height:100%;}
@@ -23,8 +22,8 @@
       min-height:100vh; padding:18px; overflow-x:hidden;
     }
 
-    /* Subtle floating bokeh */
-    .bokeh{position:fixed; inset:0; pointer-events:none; overflow:hidden;}
+    /* Floating bokeh for depth */
+    .bokeh{position:fixed; inset:0; pointer-events:none; overflow:hidden; z-index:1;}
     .dot{position:absolute; width:160px; height:160px; border-radius:50%;
       background:radial-gradient(circle at 30% 30%, #fff8, #fff0);
       filter:blur(2px); opacity:.45; animation:float 18s linear infinite;}
@@ -34,15 +33,30 @@
     .dot:nth-child(4){left:12%; top:18%; animation-duration:21s}
     @keyframes float{0%{transform:translateY(0)}100%{transform:translateY(-140px)}}
 
+    /* Confetti overlay */
+    .confetti{position:fixed; inset:0; pointer-events:none; z-index:3; overflow:hidden;}
+    .confetti-piece{
+      position:absolute; width:10px; height:16px; opacity:.9;
+      will-change: transform, opacity;
+      animation: confetti-fall linear forwards;
+    }
+    @keyframes confetti-fall{
+      0% { transform: translateY(-10vh) rotate(0deg); }
+      100% { transform: translateY(110vh) rotate(720deg); opacity:.95; }
+    }
+
+    /* Fireworks overlay (canvas) */
+    #fireworks{ position:fixed; inset:0; z-index:4; pointer-events:none; }
+
     .wrap{
       width:100%; max-width:1000px; text-align:center; position:relative;
-      padding-top:36px;
+      padding-top:36px; z-index:2; /* above bokeh, below confetti/fireworks */
     }
 
     h1{
       font-family:'Dancing Script',cursive; font-weight:700; color:var(--accent);
       font-size:clamp(1.8rem, 5.2vw, 3rem);
-      margin:0 0 16px; line-height:1.25; text-shadow:0 1px 0 #fff8; padding-top:4px;
+      margin:0 0 12px; line-height:1.25; text-shadow:0 1px 0 #fff8; padding-top:4px;
     }
     .subtitle{
       margin:0 0 24px;
@@ -73,7 +87,7 @@
       position:absolute; inset:0; width:100%; height:100%; border:0;
     }
 
-    /* Make it larger on tablets/desktops while keeping 9:16 */
+    /* Larger on desktop while preserving 9:16 */
     @media (min-width: 900px){
       .screen{
         height: 85dvh;                /* tall and cinematic */
@@ -101,25 +115,35 @@
       .note{margin-top:24px;}
     }
 
-    /* DESKTOP: push content slightly down from the very top */
+    /* Desktop: push content down a bit from the very top */
     @media (min-width: 992px){
       body{ align-items:flex-start; padding-top:56px; }
       .wrap{ padding-top:28px; }
     }
+
+    /* Respect reduced motion */
+    @media (prefers-reduced-motion: reduce){
+      .dot, .confetti-piece { animation: none !important; }
+    }
   </style>
 </head>
 <body>
+  <!-- Bokeh depth -->
   <div class="bokeh">
     <div class="dot"></div><div class="dot"></div><div class="dot"></div><div class="dot"></div>
   </div>
+
+  <!-- Confetti & Fireworks overlays -->
+  <div class="confetti" id="confetti"></div>
+  <canvas id="fireworks"></canvas>
 
   <main class="wrap" role="main">
     <h1>Happy Birthday Manu ❤️</h1>
     <p class="subtitle">Five Months Of Us, Mi Amor ✨</p>
 
-    <section class="phone" aria-label="Vertical video keepsake">
+    <section class="phone" aria-label="Vertical birthday video keepsake">
       <div class="screen">
-        <!-- Vimeo Embed (vertical video) -->
+        <!-- Vimeo Embed (vertical video). Add &muted=1&autoplay=1 to autoplay silently on mobile -->
         <iframe
           src="https://player.vimeo.com/video/1126254124?badge=0&amp;autopause=0&amp;player_id=0&amp;app_id=58479"
           frameborder="0"
@@ -133,6 +157,103 @@
     <p class="note">Forever yours - M. ❤️</p>
     <footer>Made with love</footer>
   </main>
+
+  <script>
+    // -------- Confetti generator (simple, lightweight) --------
+    (function(){
+      const root = document.getElementById('confetti');
+      const colors = ['#ff6b6b','#ffd166','#95d5b2','#9ab6ff','#f3a0ff','#fec5bb'];
+      const pieces = 100; // number of confetti pieces
+
+      for (let i = 0; i < pieces; i++){
+        const d = document.createElement('div');
+        d.className = 'confetti-piece';
+        const color = colors[Math.floor(Math.random()*colors.length)];
+        const left = Math.random()*100;        // vw
+        const delay = Math.random()*0.8;       // s
+        const duration = 4 + Math.random()*3;  // s
+        const rotate = Math.random()*360;
+
+        d.style.left = left + 'vw';
+        d.style.background = color;
+        d.style.transform = `translateY(-10vh) rotate(${rotate}deg)`;
+        d.style.animationDuration = duration + 's';
+        d.style.animationDelay = delay + 's';
+        d.style.borderRadius = Math.random() < 0.5 ? '2px' : '50%';
+        root.appendChild(d);
+      }
+
+      // Clear confetti after ~6s (so it doesn't block interactions)
+      setTimeout(() => { root.innerHTML=''; }, 6500);
+    })();
+
+    // -------- Fireworks (tiny bursts on load & on tap/click) --------
+    (function(){
+      const canvas = document.getElementById('fireworks');
+      const ctx = canvas.getContext('2d');
+      let W = canvas.width = window.innerWidth;
+      let H = canvas.height = window.innerHeight;
+
+      const DPR = Math.max(1, Math.min(2, window.devicePixelRatio || 1));
+      canvas.width = W * DPR; canvas.height = H * DPR; ctx.scale(DPR, DPR);
+
+      window.addEventListener('resize', () => {
+        W = canvas.width = window.innerWidth * DPR;
+        H = canvas.height = window.innerHeight * DPR;
+        ctx.setTransform(DPR,0,0,DPR,0,0);
+      });
+
+      const colors = ['#ff9aa2','#ffdac1','#e2f0cb','#b5ead7','#c7ceea','#ffd166','#f4978e','#a0c4ff'];
+      let particles = [];
+      const burst = (x, y) => {
+        const n = 36;
+        for (let i=0;i<n;i++){
+          const angle = (Math.PI*2*i)/n;
+          const speed = 2 + Math.random()*2.5;
+          particles.push({
+            x, y,
+            vx: Math.cos(angle)*speed,
+            vy: Math.sin(angle)*speed,
+            life: 60 + Math.random()*20,
+            color: colors[Math.floor(Math.random()*colors.length)]
+          });
+        }
+      };
+
+      const animate = () => {
+        ctx.clearRect(0,0,canvas.width/DPR,canvas.height/DPR);
+        for (let i=particles.length-1;i>=0;i--){
+          const p = particles[i];
+          p.x += p.vx; p.y += p.vy;
+          p.vy += 0.03;   // gravity
+          p.life -= 1;
+          ctx.globalAlpha = Math.max(0, p.life/80);
+          ctx.fillStyle = p.color;
+          ctx.beginPath();
+          ctx.arc(p.x, p.y, 2.4, 0, Math.PI*2);
+          ctx.fill();
+          if (p.life <= 0) particles.splice(i,1);
+        }
+        if (particles.length) requestAnimationFrame(animate);
+      };
+
+      // Fire three quick celebratory bursts on load
+      const bursts = [
+        [window.innerWidth*0.25, window.innerHeight*0.35],
+        [window.innerWidth*0.75, window.innerHeight*0.42],
+        [window.innerWidth*0.5,  window.innerHeight*0.28],
+      ];
+      bursts.forEach(([x,y],i)=>setTimeout(()=>{
+        burst(x, y); animate();
+      }, i*500));
+
+      // Tap/click to replay fireworks
+      window.addEventListener('click', (e)=>{
+        burst(e.clientX, e.clientY);
+        animate();
+      }, {passive:true});
+    })();
+  </script>
 
   <script src="https://player.vimeo.com/api/player.js"></script>
 </body>
