@@ -23,17 +23,19 @@
       min-height:100vh; padding:18px; overflow-x:hidden;
     }
 
-    /* Floating confetti/balloons/hearts */
+    /* Falling confetti/balloons/hearts */
     .floaty{ position:fixed; inset:0; pointer-events:none; z-index:5; overflow:hidden; }
     .piece{
       position:absolute;
       font-size:1.6rem;
-      animation:fall linear infinite;
+      will-change: transform, opacity;
+      animation: fall linear infinite;
       opacity:0.95;
     }
+    /* Start well above viewport and end well below so items are already falling */
     @keyframes fall{
-      0%   { transform:translateY(-10vh) rotate(0deg); opacity:1; }
-      100% { transform:translateY(110vh) rotate(360deg); opacity:0.85; }
+      0%   { transform: translateY(-120vh) rotate(0deg);   opacity:1; }
+      100% { transform: translateY(110vh)  rotate(360deg); opacity:0.85; }
     }
 
     .wrap{
@@ -125,7 +127,7 @@
   </main>
 
   <script>
-    // Floating confetti, balloons & hearts
+    // Falling confetti, balloons & hearts (start immediately using negative delays)
     (function(){
       const root = document.getElementById('floaty');
       const symbols = ['🎉','🎈','💖'];
@@ -137,9 +139,10 @@
         d.className='piece';
         d.textContent=symbols[Math.floor(Math.random()*symbols.length)];
         d.style.left=Math.random()*100+'vw';
+        const dur = 8 + Math.random()*8;              // 8–16s fall
         d.style.fontSize=(16+Math.random()*18)+'px';
-        d.style.animationDuration=(8+Math.random()*8)+'s';
-        d.style.animationDelay=(Math.random()*10)+'s';
+        d.style.animationDuration = dur + 's';
+        d.style.animationDelay = (-Math.random()*dur) + 's'; // negative = start mid-animation
         root.appendChild(d);
       }
     })();
