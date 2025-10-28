@@ -143,9 +143,9 @@
 
     <section class="phone" aria-label="Vertical birthday video keepsake">
       <div class="screen">
-        <!-- Vimeo Embed (vertical video) -->
+        <!-- Vimeo Embed (vertical video, cleaned UI) -->
         <iframe
-          src="https://player.vimeo.com/video/1131444835?badge=0&amp;autopause=0&amp;player_id=0&amp;app_id=58479"
+          src="https://player.vimeo.com/video/1131444835?badge=0&amp;autopause=0&amp;player_id=0&amp;app_id=58479&amp;title=0&amp;byline=0&amp;portrait=0"
           frameborder="0"
           allow="autoplay; fullscreen; picture-in-picture; clipboard-write; encrypted-media; web-share"
           referrerpolicy="strict-origin-when-cross-origin"
@@ -159,19 +159,19 @@
   </main>
 
   <script>
-    // -------- Confetti generator (simple, lightweight) --------
+    // Confetti generator
     (function(){
       const root = document.getElementById('confetti');
       const colors = ['#ff6b6b','#ffd166','#95d5b2','#9ab6ff','#f3a0ff','#fec5bb'];
-      const pieces = 100; // number of confetti pieces
+      const pieces = 100;
 
       for (let i = 0; i < pieces; i++){
         const d = document.createElement('div');
         d.className = 'confetti-piece';
         const color = colors[Math.floor(Math.random()*colors.length)];
-        const left = Math.random()*100;        // vw
-        const delay = Math.random()*0.8;       // s
-        const duration = 4 + Math.random()*3;  // s
+        const left = Math.random()*100;
+        const delay = Math.random()*0.8;
+        const duration = 4 + Math.random()*3;
         const rotate = Math.random()*360;
 
         d.style.left = left + 'vw';
@@ -182,12 +182,10 @@
         d.style.borderRadius = Math.random() < 0.5 ? '2px' : '50%';
         root.appendChild(d);
       }
-
-      // Clear confetti after ~6s (so it doesn't block interactions)
       setTimeout(() => { root.innerHTML=''; }, 6500);
     })();
 
-    // -------- Fireworks (tiny bursts on load & on tap/click) --------
+    // Fireworks bursts
     (function(){
       const canvas = document.getElementById('fireworks');
       const ctx = canvas.getContext('2d');
@@ -225,7 +223,7 @@
         for (let i=particles.length-1;i>=0;i--){
           const p = particles[i];
           p.x += p.vx; p.y += p.vy;
-          p.vy += 0.03;   // gravity
+          p.vy += 0.03;
           p.life -= 1;
           ctx.globalAlpha = Math.max(0, p.life/80);
           ctx.fillStyle = p.color;
@@ -237,7 +235,6 @@
         if (particles.length) requestAnimationFrame(animate);
       };
 
-      // Fire three quick celebratory bursts on load
       const bursts = [
         [window.innerWidth*0.25, window.innerHeight*0.35],
         [window.innerWidth*0.75, window.innerHeight*0.42],
@@ -247,7 +244,6 @@
         burst(x, y); animate();
       }, i*500));
 
-      // Tap/click to replay fireworks
       window.addEventListener('click', (e)=>{
         burst(e.clientX, e.clientY);
         animate();
