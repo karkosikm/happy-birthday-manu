@@ -6,7 +6,7 @@
   <title>Happy Birthday, Manu ❤️</title>
   <meta name="description" content="A birthday surprise — five months of us." />
 
-  <!-- Perf: preconnect to Vimeo domains -->
+  <!-- Perf: preconnect to Vimeo + fonts -->
   <link rel="preconnect" href="https://player.vimeo.com" crossorigin>
   <link rel="preconnect" href="https://i.vimeocdn.com" crossorigin>
   <link rel="preconnect" href="https://f.vimeocdn.com" crossorigin>
@@ -35,7 +35,7 @@
     /* Falling confetti/balloons/hearts -> BEHIND the phone/video */
     .floaty{
       position: fixed; inset:0; pointer-events:none; overflow:hidden;
-      z-index: 0; /* behind everything */
+      z-index: 0; /* behind the phone frame */
     }
     .piece{
       position:absolute;
@@ -80,9 +80,9 @@
 
     @media (min-width:900px){
       .screen{
-        height:82dvh; /* a touch smaller than before */
+        height:82dvh; /* slightly smaller for faster initial stream */
         width: calc(82dvh * 9 / 16);
-        max-width: 560px; /* smaller desktop cap to encourage lower-bitrate stream */
+        max-width: 560px;
       }
     }
 
@@ -102,20 +102,6 @@
     @media (prefers-reduced-motion: reduce){
       .piece{ animation: none !important; }
     }
-
-    /* Unmute overlay (kept, but now it's above only the phone area if you want to keep using it) */
-    .unmute{
-      position:absolute; inset:auto 0 12px 0; margin:auto;
-      width:fit-content; padding:10px 14px;
-      background:rgba(255,255,255,.9);
-      border-radius:999px; box-shadow:0 6px 20px rgba(0,0,0,.15);
-      font-weight:600; font-size:0.95rem; color:#111; cursor:pointer; user-select:none;
-      display:flex; align-items:center; gap:8px;
-      z-index:4;
-      transition: transform .15s ease, opacity .15s ease;
-    }
-    .unmute:hover{ transform: translateY(-1px); }
-    .unmute.hidden{ opacity:0; pointer-events:none; }
   </style>
 </head>
 <body>
@@ -130,15 +116,12 @@
       <div class="screen">
         <iframe
           id="vimeo"
-          src="https://player.vimeo.com/video/1131444835?badge=0&amp;autopause=0&amp;title=0&amp;byline=0&amp;portrait=0&amp;loop=1&amp;autoplay=1&amp;muted=1&amp;playsinline=1"
+          src="https://player.vimeo.com/video/1131444835?badge=0&amp;autopause=0&amp;title=0&amp;byline=0&amp;portrait=0&amp;autoplay=1&amp;muted=1&amp;playsinline=1"
           allow="autoplay; fullscreen; picture-in-picture; clipboard-write; encrypted-media; web-share"
           referrerpolicy="strict-origin-when-cross-origin"
           title="Happy Birthday, Manu ❤️"
           loading="eager">
         </iframe>
-
-        <!-- Tap to unmute -->
-        <div class="unmute" id="unmuteBtn">🔊 Tap for sound</div>
       </div>
     </section>
 
@@ -149,7 +132,7 @@
   <!-- Vimeo Player API -->
   <script src="https://player.vimeo.com/api/player.js"></script>
   <script>
-    // Floating confetti, balloons & hearts (start mid-fall via negative delays)
+    // Falling confetti, balloons & hearts (start mid-fall via negative delays)
     (function(){
       const root = document.getElementById('floaty');
       const symbols = ['🎉','🎈','💖'];
@@ -167,30 +150,6 @@
         d.style.animationDelay = (-Math.random()*dur) + 's'; // negative = already falling
         root.appendChild(d);
       }
-    })();
-
-    // Vimeo: autoplay muted (required by browsers), then unmute on first tap
-    (function(){
-      const iframe = document.getElementById('vimeo');
-      const player = new Vimeo.Player(iframe);
-      const btn = document.getElementById('unmuteBtn');
-
-      player.play().catch(()=>{/* ignore */});
-
-      function unmute() {
-        player.setMuted(false).then(()=>{
-          player.setVolume(1);
-          btn.classList.add('hidden');
-        }).catch(()=>{/* some browsers need direct iframe tap */});
-      }
-      btn.addEventListener('click', unmute, {passive:true});
-
-      iframe.addEventListener('load', ()=>{
-        player.getMuted().then(m => { if(!m) btn.classList.add('hidden'); });
-      });
-      player.on('volumechange', ({volume})=>{
-        player.getMuted().then(m => { if(!m && volume>0) btn.classList.add('hidden'); });
-      });
     })();
   </script>
 </body>
